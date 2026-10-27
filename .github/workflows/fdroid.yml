@@ -36,6 +36,10 @@ jobs:
           gh release download --repo vk2eta/quik-RadioMsg \
             --pattern "*.apk" --dir repo || echo "No APKs found in quik-RadioMsg"
 
+      - name: Restore keystore
+        run: |
+          echo "${{ secrets.FDROID_KEYSTORE }}" | base64 -d > keystore.p12
+
       - name: Create F-Droid config
         run: |
           cat > config.yml << 'EOF'
@@ -43,10 +47,15 @@ jobs:
           repo_name: "vk2eta F-Droid Repo"
           repo_description: "Personal F-Droid Repository"
           archive_older: 3
+          keystore: "keystore.p12"
+          keystorepass: "${{ secrets.FDROID_KEYSTORE_PASS }}"
+          repo_keyalias: "fdroid"
+          keypass: "${{ secrets.FDROID_KEYSTORE_PASS }}"
+          keydname: "CN=vk2eta, OU=FDroid, O=vk2eta, L=Unknown, S=Unknown, C=AU"
           EOF
 
       - name: Build F-Droid index
-        run: fdroid update --create-metadata --nosign
+        run: fdroid update --create-metadata
 
       - name: Upload Pages Artifact
         uses: actions/upload-pages-artifact@v3
