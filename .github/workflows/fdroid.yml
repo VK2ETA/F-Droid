@@ -1,0 +1,27 @@
+name: Update F-Droid Repo
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 0 * * *'
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fetch and Build F-Droid Index
+        uses: efreak/fdroid-action@v1
+        with:
+          # Tells F-Droid to trust and distribute your pre-signed APKs
+          allow_unverified_apks: true
+          apps: |
+            vk2eta/RadioMsg
+            vk2eta/quik-RadioMsg
+
+      - name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v4
