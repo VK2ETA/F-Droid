@@ -13,15 +13,27 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
       - name: Fetch and Build F-Droid Index
         uses: efreak/fdroid-action@main
         with:
-          # Tells F-Droid to trust and distribute your pre-signed APKs
           allow_unverified_apks: true
           apps: |
             vk2eta/RadioMsg
             vk2eta/quik-RadioMsg
 
+      - name: Upload Pages Artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: '.'        # or './repo' depending on where fdroid-action outputs files
+
       - name: Deploy to GitHub Pages
+        id: deployment
         uses: actions/deploy-pages@v4
