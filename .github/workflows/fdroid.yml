@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Fetch and Build F-Droid Index
-        uses: efreak/fdroid-action@v1
+        uses: efreak/fdroid-action@main
         with:
           # Tells F-Droid to trust and distribute your pre-signed APKs
           allow_unverified_apks: true
