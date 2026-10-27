@@ -15,14 +15,9 @@ jobs:
       - name: Generate keystore
         run: |
           mkdir fdroid && cd fdroid
-          cat > config.yml << 'EOF'
-          repo_url: "https://vk2eta.github.io/F-Droid/repo"
-          repo_name: "vk2eta F-Droid Repo"
-          repo_description: "Personal F-Droid Repository"
-          EOF
           fdroid init
-          echo "=== KEYSTORE_B64 ==="
+          echo "=== KEYSTORE_B64 (copy this for FDROID_KEYSTORE secret) ==="
           base64 keystore.p12 | tr -d '\n'
           echo ""
-          echo "=== KEYSTORE_PASS ==="
-          grep keystorepass config.yml
+          echo "=== CONFIG (find keystorepass value for FDROID_KEYSTORE_PASS secret) ==="
+          cat config.yml
