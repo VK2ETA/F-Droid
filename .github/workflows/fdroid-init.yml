@@ -1,0 +1,28 @@
+name: Generate F-Droid Key (Run Once)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  generate-key:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install fdroidserver
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y fdroidserver
+
+      - name: Generate keystore
+        run: |
+          mkdir fdroid && cd fdroid
+          cat > config.yml << 'EOF'
+          repo_url: "https://vk2eta.github.io/F-Droid/repo"
+          repo_name: "vk2eta F-Droid Repo"
+          repo_description: "Personal F-Droid Repository"
+          EOF
+          fdroid init
+          echo "=== KEYSTORE_B64 ==="
+          base64 keystore.p12 | tr -d '\n'
+          echo ""
+          echo "=== KEYSTORE_PASS ==="
+          grep keystorepass config.yml
