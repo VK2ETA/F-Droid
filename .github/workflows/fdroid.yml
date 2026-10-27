@@ -21,18 +21,37 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Fetch and Build F-Droid Index
-        uses: efreak/fdroid-action@main
-        with:
-          allow_unverified_apks: true
-          apps: |
-            vk2eta/RadioMsg
-            vk2eta/quik-RadioMsg
+      - name: Install fdroidserver
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y fdroidserver
+
+      - name: Download APKs from releases
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p repo
+          gh release download --repo vk2eta/RadioMsg \
+            --pattern "*.apk" --dir repo || echo "No APKs found in RadioMsg"
+          gh release download --repo vk2eta/quik-RadioMsg \
+            --pattern "*.apk" --dir repo || echo "No APKs found in quik-RadioMsg"
+
+      - name: Create F-Droid config
+        run: |
+          cat > config.yml << 'EOF'
+          repo_url: "https://vk2eta.github.io/F-Droid/repo"
+          repo_name: "vk2eta F-Droid Repo"
+          repo_description: "Personal F-Droid Repository"
+          archive_older: 3
+          EOF
+
+      - name: Build F-Droid index
+        run: fdroid update --create-metadata --nosign
 
       - name: Upload Pages Artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: '.'        # or './repo' depending on where fdroid-action outputs files
+          path: '.'
 
       - name: Deploy to GitHub Pages
         id: deployment
