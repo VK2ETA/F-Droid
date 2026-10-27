@@ -7,17 +7,21 @@ jobs:
   generate-key:
     runs-on: ubuntu-latest
     steps:
-      - name: Install fdroidserver
+      - name: Generate keystore with keytool
         run: |
-          sudo apt-get update
-          sudo apt-get install -y fdroidserver
+          keytool -genkey -v \
+            -keystore keystore.p12 \
+            -storetype pkcs12 \
+            -alias fdroid \
+            -keyalg RSA \
+            -keysize 2048 \
+            -validity 10000 \
+            -storepass fdroidpass123 \
+            -keypass fdroidpass123 \
+            -dname "CN=vk2eta, OU=FDroid, O=vk2eta, L=Unknown, S=Unknown, C=AU"
 
-      - name: Generate keystore
-        run: |
-          mkdir fdroid && cd fdroid
-          fdroid init
-          echo "=== KEYSTORE_B64 (copy this for FDROID_KEYSTORE secret) ==="
+          echo "=== KEYSTORE_B64 (save as FDROID_KEYSTORE secret) ==="
           base64 keystore.p12 | tr -d '\n'
           echo ""
-          echo "=== CONFIG (find keystorepass value for FDROID_KEYSTORE_PASS secret) ==="
-          cat config.yml
+          echo "=== Password (save as FDROID_KEYSTORE_PASS secret) ==="
+          echo "fdroidpass123"
