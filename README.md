@@ -24,3 +24,5 @@ Attributions and great thanks to the developers of:
 - QUIK, as QUIK-RMSG is a fork of that nice messaging app available in F-Droid and at https://github.com/quik-sms/quik/releases. QUIK-RMSG works the same as the original QUIK, it just adds the option for a secured access by RadioMsg to sending and receiving SMSs and MMSs. No other apps can have silent access to the messages as it requires the RadioMsg specific app signature.
 
 - Getback-GPS, as Where_is_it? is a slightly modified version of that app relying on its nice compass graphics. The original is available in F-Droid and at https://github.com/ruleant/getback_gps/releases.
+
+My apps development is now Assisted by Anthropic Claude.
